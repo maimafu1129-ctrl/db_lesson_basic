@@ -1,5 +1,5 @@
 -- Q1 部署テーブル追加
-create table `department`(
+create table `departments`(
    department_id INT unsigned not null auto_increment PRIMARY KEY,
    name VARCHAR(20) not null,
    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -22,21 +22,24 @@ INSERT INTO department (name)
     ('人事'),
     ('情報システム');
 
-
+ 
 
 
 -- Q3-2 10人分のレコードを追加する,人数比率は営業3人、開発4人、経理1人、人事1人、情報システム1人
 -- 存在する部署のIDが割り振られること/どう割り振るかは指定しませんが、必ずWHEREを使って条件を絞ってください
-UPDATE people SET department_id = 1 WHERE person_id IN (1);
-UPDATE people SET department_id = 1 WHERE person_id IN (2);
-UPDATE people SET department_id = 1 WHERE person_id IN (12);
-UPDATE people SET department_id = 2 WHERE person_id IN (4);
-UPDATE people SET department_id = 2 WHERE person_id IN (7);
-UPDATE people SET department_id = 2 WHERE person_id IN (9);
-UPDATE people SET department_id = 3 WHERE person_id IN (6);
-UPDATE people SET department_id = 4 WHERE person_id IN (3);
-UPDATE people SET department_id = 5 WHERE person_id IN (8);
-UPDATE people SET department_id = 2 WHERE person_id IN (10);
+INSERT INTO people (name, email, age, gender,departments)
+VALUES
+('佐々木一郎', 'sasaki@gizumo.jp', 29, 1, 1),
+('小林あかり', 'kobayashi@gizumo.jp', 26, 2, 2),
+('中村大輔', 'nakamura@gizumo.jp', 38, 1, 4),
+('加藤美香', 'kato@gizumo.jp', 34, 2, 2),
+('早坂てつお', 'hayasaka@gizumo.co.jp', 61, 1, 1),
+('吉田翔太','yoshida@gizumo.jp', 27, 1, 3),
+('山田花子', 'hyamada@gizumo.jp', 28, 2, 2),
+('佐藤健一', 'sato@gizumo.jp', 35, 1, 5),
+('高橋美咲', 'takahashi@gizumo.jp', 24, 2, 2),
+('伊藤直樹', 'ito@gizumo.jp', 42, 1, 1),
+
 
 
 
@@ -56,6 +59,12 @@ UPDATE people SET department_id = 2 WHERE person_id IN (10);
    
 
 -- Q4　department_id NULLを確認
+UPDATE people SET department_id = 1 WHERE person_id IN (1);
+UPDATE people SET department_id = 1 WHERE person_id IN (2);
+UPDATE people SET department_id = 4 WHERE person_id IN (3); 
+UPDATE people SET department_id = 2 WHERE person_id IN (4); 
+UPDATE people SET department_id = 3 WHERE person_id IN (6);
+
 SELECT * FROM people WHERE department_id IS NULL;
 
 -- Q5　年齢の降順で男性の名前と年齢を取得してください。
@@ -73,7 +82,7 @@ WHERE
 ORDER BY
   `created_at`;
 -- 回答
--- peopleテーブルにあるdepartment_idが1（営業）の方の’name’’email’’age’のデータをcreated_atの時間が古い順に表示してください。
+-- peopleテーブルにあるdepartment_idカラムが1（営業）のレコードを取得し、レコードの’name’’email’’age’カラムをcreated_atカラムの時間が古い順に表示してください。
 
 -- Q7 20代の女性と40代の男性の名前一覧を取得
 SELECT name FROM people WHERE gender = 2 AND age >= 20 and age < 30 OR gender = 1 AND age >= 40 AND age < 50;
@@ -92,6 +101,6 @@ SELECT people. name, department. name, reports.content FROM people INNER JOIN de
 
 
 -- Q11　日報を一つも提出していない人の名前一覧を取得
-SELECT p.name,r.content FROM people p LEFT OUTER JOIN reports r USING (person_id);
+SELECT p.name, r.content FROM people p LEFT OUTER JOIN reports r USING (person_id)WHERE r.person_id IS NULL;
 
 
